@@ -2,6 +2,6 @@
 
 Для запуска
 ```
-pip install -r requirements.txt
-python3 telegram.py
+poetry install
+make run
 ```
