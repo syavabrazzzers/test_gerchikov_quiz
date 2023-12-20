@@ -30,7 +30,6 @@ format:
 	poetry run black .
 	poetry run isort .
 	poetry run ruff . --fix --exit-zero
-	poetry run pre-commit run --all
 	poetry run mypy .
 
 # Секция запуска

@@ -1,14 +1,14 @@
 import re
 
 from aiogram import Router, types
-from aiogram.fsm.context import FSMContext
 from aiogram.filters.command import Command
 from aiogram.filters.state import StateFilter
+from aiogram.fsm.context import FSMContext
 from loguru import logger
 
 import mbriggs.markups as btn
-from main.db import db
 from main.bot import bot
+from main.db import db
 from mbriggs.helpers import result
 from mbriggs.states import MBriggsState
 
@@ -16,22 +16,22 @@ router = Router()
 
 
 ####################################ОТМЕНА########################################
-@router.message(Command('cancel'), StateFilter('*'))
+@router.message(Command("cancel"), StateFilter("*"))
 async def cancel(message: types.Message, state: FSMContext):
     await message.answer("Выход.\n")
     await state.clear()
 
 
 ####################################СТАРТ########################################
-@router.message(Command('start'))
+@router.message(Command("start"))
 async def admin(message: types.Message, state: FSMContext):
-    await message.answer(btn.start, parse_mode='html')
+    await message.answer(btn.start, parse_mode="html")
 
 
 ####################################АВТОРИЗАЦИЯ########################################
-@router.message(Command('mbriggs_test'))
+@router.message(Command("mbriggs_test"))
 async def admin(message: types.Message, state: FSMContext):
-    await message.answer(btn.text1, parse_mode='html')
+    await message.answer(btn.text1, parse_mode="html")
     await message.answer(btn.name)
     await state.set_state(MBriggsState.name)
 
@@ -101,34 +101,38 @@ async def user_naber(callback: types.CallbackQuery, state: FSMContext):
     txt = btn.__dict__[f"user_naber_{state_user}"]
     try:
         already_answer = data[f"user_naber_{state_user}"]
-        txt += f'''
+        txt += f"""
 <i>Ваш ответ:{already_answer}
 </i>
-'''
+"""
     except:
         pass
-    await bot.send_message(callback.from_user.id, txt, reply_markup=btn.choice, parse_mode='html')
+    await bot.send_message(
+        callback.from_user.id, txt, reply_markup=btn.choice, parse_mode="html"
+    )
 
     data = await state.get_data()
     logger.info(data)
 
 
 ####################################КЛЮЧИ########################################
-@router.message(Command('listink13'), StateFilter("*"))
+@router.message(Command("listink13"), StateFilter("*"))
 async def list_key(message: types.Message):
     res = db.list_key(message.from_user.id)
     if not res:
         await bot.send_message(message.from_user.id, btn.list_key_error)
         return
-    keys = ''
+    keys = ""
     for rows in res:
-        keys += '`' + rows[0] + '`' + '\n'
-    await bot.send_message(message.from_user.id, keys, parse_mode='markdown')
+        keys += "`" + rows[0] + "`" + "\n"
+    await bot.send_message(message.from_user.id, keys, parse_mode="markdown")
 
 
-@router.message(Command('add'))
+@router.message(Command("add"))
 async def add_key(message: types.Message, state: FSMContext):
-    await bot.send_message(message.from_user.id, "Укажите название закладки, которую хотите добавить!")
+    await bot.send_message(
+        message.from_user.id, "Укажите название закладки, которую хотите добавить!"
+    )
     await state.set_state(MBriggsState.add_key_start)
 
 
@@ -136,9 +140,13 @@ async def add_key(message: types.Message, state: FSMContext):
 async def add_key(message: types.Message, state: FSMContext):
     key = message.text
     if db.isMessageExists(key):
-        await bot.send_message(message.from_user.id, "Такое название уже занято. Попробуйте другой!")
+        await bot.send_message(
+            message.from_user.id, "Такое название уже занято. Попробуйте другой!"
+        )
         return
-    await bot.send_message(message.from_user.id, btn.add_key(key), parse_mode='markdown')
+    await bot.send_message(
+        message.from_user.id, btn.add_key(key), parse_mode="markdown"
+    )
     await state.update_data(key=key)
     await state.set_state(MBriggsState.add_key)
 
@@ -153,9 +161,11 @@ async def add_key2(message: types.Message, state: FSMContext):
     await state.clear()
 
 
-@router.message(Command('get'))
+@router.message(Command("get"))
 async def get_key(message: types.Message, state: FSMContext):
-    await bot.send_message(message.from_user.id, "Укажите название закладки, которую хотите получить!")
+    await bot.send_message(
+        message.from_user.id, "Укажите название закладки, которую хотите получить!"
+    )
     await state.set_state(MBriggsState.get_key)
 
 
@@ -174,9 +184,11 @@ async def get_key2(message: types.Message, state: FSMContext):
     await state.clear()
 
 
-@router.message(Command('rm'))
+@router.message(Command("rm"))
 async def get_key(message: types.Message, state: FSMContext):
-    await bot.send_message(message.from_user.id, "Укажите название закладки, которую хотите удалить!")
+    await bot.send_message(
+        message.from_user.id, "Укажите название закладки, которую хотите удалить!"
+    )
     await state.set_state(MBriggsState.rm_key)
 
 
@@ -187,5 +199,7 @@ async def get_key2(message: types.Message, state: FSMContext):
     if not res:
         await bot.send_message(message.from_user.id, btn.remove_key_error)
         return
-    await bot.send_message(message.from_user.id, btn.remove_key(key), parse_mode='markdown')
+    await bot.send_message(
+        message.from_user.id, btn.remove_key(key), parse_mode="markdown"
+    )
     await state.clear()

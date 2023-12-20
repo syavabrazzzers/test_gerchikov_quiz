@@ -1,16 +1,15 @@
 import enum
-from typing import Type
 
 from pydantic import BaseModel
 
 
 class MotivationTypes(enum.Enum):
-    IN = 'in'
-    PR = 'pr'
-    PA = 'pa'
-    HO = 'ho'
-    LU = 'lu'
-    NULL = ''
+    IN = "in"
+    PR = "pr"
+    PA = "pa"
+    HO = "ho"
+    LU = "lu"
+    NULL = ""
 
 
 class QuestionSchema(BaseModel):

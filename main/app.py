@@ -1,9 +1,9 @@
-from aiogram import Bot, Dispatcher
+from aiogram import Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from gerchikov.router import router as gerchikov_router
-from mbriggs.router import router as mbriggs_router
 from main.db import db
+from mbriggs.router import router as mbriggs_router
 
 dp = Dispatcher(storage=MemoryStorage())
 

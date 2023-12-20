@@ -1,11 +1,11 @@
 from gerchikov.texts import questions
 
 results = {
-    'pa': 'Патриотический тип',
-    'pr': 'Профессиональный тип',
-    'in': 'Инструментальный тип',
-    'ho': 'Хозяйский тип',
-    'lu': 'Люмпенизированный тип'
+    "pa": "Патриотический тип",
+    "pr": "Профессиональный тип",
+    "in": "Инструментальный тип",
+    "ho": "Хозяйский тип",
+    "lu": "Люмпенизированный тип",
 }
 
 
@@ -19,19 +19,19 @@ def get_result(data: dict):
 
 
 def add_points(data, question):
-    state_answers = data['answers']
+    state_answers = data["answers"]
 
     for item in state_answers:
         answer = questions[question].questions[item]
 
         if isinstance(answer, list):
             for ans in answer:
-                if ans.value != '':
+                if ans.value != "":
                     count = data.get(ans.value, 0) + 1
                     data[ans.value] = count
 
             continue
 
-        if answer.value != '':
+        if answer.value != "":
             count = data.get(answer.value, 0) + 1
             data[answer.value] = count
