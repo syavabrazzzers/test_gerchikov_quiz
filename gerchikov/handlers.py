@@ -1,4 +1,9 @@
+from aiogram.types import CallbackQuery
+
 from gerchikov.texts import questions
+from main.bot import bot
+
+from loguru import logger
 
 results = {
     "pa": "Патриотический тип",
@@ -35,3 +40,15 @@ def add_points(data, question):
         if answer.value != "":
             count = data.get(answer.value, 0) + 1
             data[answer.value] = count
+
+
+async def answer_result(callback: CallbackQuery, data: dict):
+    text = f"""{data['name']}, ваш тип - {get_result(data)}"""
+    await bot.send_message(
+        callback.message.chat.id,
+        text=text,
+    )
+    data.pop('max_choices')
+    data.pop('question')
+    data.pop('answers')
+    logger.info(data)

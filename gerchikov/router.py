@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
 from gerchikov.filters import CallbackTextFilter
-from gerchikov.handlers import add_points, get_result
+from gerchikov.handlers import add_points, get_result, answer_result
 from gerchikov.markups import get_quiz_markup
 from gerchikov.states import GerchikovState
 from gerchikov.texts import questions
@@ -50,11 +50,7 @@ async def next_question_callback(callback: CallbackQuery, state: FSMContext):
     current_question = state_data["question"]
 
     if (current_question + 1) == len(questions):
-        print(state_data)
-        await bot.send_message(
-            callback.message.chat.id,
-            text=get_result(state_data),
-        )
+        await answer_result(callback, state_data)
         return
 
     next_question = questions[current_question + 1]
@@ -108,11 +104,7 @@ async def question_answer(callback: CallbackQuery, state: FSMContext):
         )
 
         if current_question == len(questions):
-            print(state_data)
-            await bot.send_message(
-                callback.message.chat.id,
-                text=get_result(state_data),
-            )
+            await answer_result(callback, state_data)
             return
 
         next_question = questions[current_question]
